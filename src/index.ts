@@ -1,10 +1,21 @@
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
+
+class Note {
+  constructor(public data: string[] = ["Moonhalo"]) {}
+}
 
 const app = new Elysia()
-  .get("/", () => "Hello Elysia")
-  .get("/ping", () => "pong")
+  .decorate("note", new Note())
+  .get("/note", ({ note }) => note.data)
+  .get(
+    "/note/:index",
+    ({ note, params: { index }, error }) => {
+      return note.data[index] ?? error(404);
+    },
+    {
+      params: t.Object({
+        index: t.Number(),
+      }),
+    },
+  )
   .listen(3000);
-
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
-);
