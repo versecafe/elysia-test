@@ -1,5 +1,7 @@
+import { notes as deafaultNotes } from "./constants";
+
 export class Note {
-  constructor(public data: string[] = ["Moonhalo"]) {}
+  data = deafaultNotes;
 
   add(note: string) {
     this.data.push(note);
