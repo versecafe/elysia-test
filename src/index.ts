@@ -9,10 +9,23 @@ export const note = new Elysia()
       data: t.String(),
     }),
   })
+  .post("/note/random", ({ note }) => {
+    const content = [
+      "Remember to smile today!",
+      "Buy groceries",
+      "Call mom",
+      "Finish that project",
+      "Take a walk outside",
+      "Drink more water",
+      "Read a book",
+    ];
+    const randomContent = content[Math.floor(Math.random() * content.length)];
+    return note.add(randomContent);
+  })
   .get(
     "/note/:index",
     ({ note, params: { index }, error }) => {
-      return note.data[index] ?? error(404, "Not Found :(");
+      return note.data[index + 1] ?? error(404, "Not Found :(");
     },
     {
       params: t.Object({
