@@ -21,6 +21,12 @@ const app = new Hono()
     ];
     const randomContent = content[Math.floor(Math.random() * content.length)];
     return c.json(noteInstance.add(randomContent));
+  })
+  .get("/note/:index", (c) => {
+    const index = Number(c.req.param("index"));
+    const note = noteInstance.data[index + 1];
+    if (!note) return c.json({ message: "Not Found :(" }, 404);
+    return c.json(note);
   });
 
 export default app;
