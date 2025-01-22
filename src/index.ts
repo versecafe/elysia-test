@@ -1,23 +1,5 @@
 import { Elysia, t } from "elysia";
-
-class Note {
-  constructor(public data: string[] = ["Moonhalo"]) {}
-
-  add(note: string) {
-    this.data.push(note);
-
-    return this.data;
-  }
-
-  remove(index: number) {
-    return this.data.splice(index, 1);
-  }
-
-  update(index: number, note: string) {
-    this.data[index] = note;
-    return this.data[index];
-  }
-}
+import { Note } from "./note";
 
 export const note = new Elysia()
   .decorate("note", new Note())
