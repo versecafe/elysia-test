@@ -6,7 +6,7 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
-    "elysia": "latest"
+    "hono": "^4.6.17"
   },
   "devDependencies": {
     "typescript": "^5.7.3",

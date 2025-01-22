@@ -1,15 +1,15 @@
-import { Elysia, t } from "elysia";
+import { Hono } from "hono";
 import { Note } from "./note";
 
-export const note = new Elysia()
-  .decorate("note", new Note())
-  .get("/note", ({ note }) => note.data)
-  .put("/note", ({ note, body: { data } }) => note.add(data), {
-    body: t.Object({
-      data: t.String(),
-    }),
+const noteInstance = new Note();
+
+const app = new Hono()
+  .get("/note", (c) => c.json(noteInstance.data))
+  .put("/note", async (c) => {
+    const { data } = await c.req.json();
+    return c.json(noteInstance.add(data));
   })
-  .post("/note/random", ({ note }) => {
+  .post("/note/random", (c) => {
     const content = [
       "Remember to smile today!",
       "Buy groceries",
@@ -20,45 +20,7 @@ export const note = new Elysia()
       "Read a book",
     ];
     const randomContent = content[Math.floor(Math.random() * content.length)];
-    return note.add(randomContent);
-  })
-  .get(
-    "/note/:index",
-    ({ note, params: { index }, error }) => {
-      return note.data[index + 1] ?? error(404, "Not Found :(");
-    },
-    {
-      params: t.Object({
-        index: t.Number(),
-      }),
-    },
-  )
-  .delete(
-    "/note/:index",
-    ({ note, params: { index }, error }) => {
-      if (index in note.data) return note.remove(index);
+    return c.json(noteInstance.add(randomContent));
+  });
 
-      return error(422);
-    },
-    {
-      params: t.Object({
-        index: t.Number(),
-      }),
-    },
-  )
-  .patch(
-    "/note/:index",
-    ({ note, params: { index }, body: { data }, error }) => {
-      if (index in note.data) return note.update(index, data);
-
-      return error(422);
-    },
-    {
-      params: t.Object({
-        index: t.Number(),
-      }),
-      body: t.Object({
-        data: t.String(),
-      }),
-    },
-  );
+export default app;
